@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% set list_prof = ["инженер-исследователь", "пилот", "строитель", "экзобиолог", "врач", "Инженер по терраформированию",
+     "климатолог", "специалист по радиационной защите", "астрогеолог", "гляциолог", "инженер жизнеобеспечения", "метеоролог", 
+     "оператор марсохода", "киберинженер", "штурман", "пилот дронов"] %}
+    {% if list == 'ul' %}
+        <ul>
+        {% for prof in  list_prof%}
+            <li> {{ prof  }} </li>
+        {% endfor %}
+        </ul>
+    {% elif list == "ol" %}
+        <ol>
+        {% for prof in  list_prof%}
+            <li> {{ prof  }} </li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <div class="aligh aligh-danger"> Error wrong parameter</div>
+    {% endif %}
+    
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="info">
+        {% set keys = ['surname', 'name', 'education', 'profession', 'sex', 'motivation', 'ready'] %}
+        {% for key in keys %}
+            <h4>{{ key|capitalize }}:{{ info[key]|capitalize }}</h4>
+        {% endfor %}
+    </div>
+{% endblock %}
