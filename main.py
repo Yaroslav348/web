@@ -126,14 +126,11 @@ def edit_news(id):
         film = db_sess.query(Films).filter(Films.id == id,
                                           (Films.user == current_user)|(current_user == '1')
                                           ).first()
-        print(form.start_date.data)
         if film:
-            db_sess = db_session.create_session()
             logo_dir = os.path.join(os.path.dirname(app.instance_path), 'static')
             f = form.logo.data
             filename = secure_filename(f.filename)
             f.save(os.path.join(logo_dir, 'img', filename))
-            film = Films()
             film.name = form.name.data,
             film.genre = form.genre.data,
             film.year = form.year.data,
