@@ -9,21 +9,21 @@
 <div class="col-md6 border rounded">
     <h2>{{item.name}}</h2>
     <div>
-        Режисер - {{item.director}}, Год выпуска  - {{item.year}}
+        Режисер - {{item.director}}, Год выпуска  - {{item.year}}, id -{{ item.id }}
     </div>
     {% if current_user.is_authenticated and current_user.is_admin %}
         <div>
             <a class="btn btn-warning", href="/film/{{ item.id }}">
                 Изменить
             </a>
-            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#you_sure">
+            <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#you_sure_{{ item.id }}">
                 Удалить
             </a>
-            <div class="modal fade" id="you_sure" tabindex="-1" aria-labelledby="you_sure" aria-hidden="true">
+            <div class="modal fade" id="you_sure_{{ item.id }}" tabindex="-1" aria-labelledby="you_sure" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="you_sure">Вы уверены?</h5>
+                    <h5 class="modal-title" id="you_sure_{{ item.id }}">Вы уверены?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-footer">

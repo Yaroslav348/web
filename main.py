@@ -107,8 +107,7 @@ def edit_news(id):
     form = FilmForm()
     if request.method == "GET":
         db_sess = db_session.create_session()
-        film = db_sess.query(Films).filter(Films.id == id, current_user.is_admin
-                                          ).first()
+        film = db_sess.query(Films).filter(Films.id == id, current_user.is_admin).first()
         if film:
             form.name.data = film.name 
             form.genre.data = film.genre 
@@ -123,24 +122,22 @@ def edit_news(id):
             abort(404)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        film = db_sess.query(Films).filter(Films.id == id,
-                                          (Films.user == current_user)|(current_user == '1')
-                                          ).first()
-        if film:
-            logo_dir = os.path.join(os.path.dirname(app.instance_path), 'static')
-            f = form.logo.data
-            filename = secure_filename(f.filename)
-            f.save(os.path.join(logo_dir, 'img', filename))
-            film.name = form.name.data,
-            film.genre = form.genre.data,
-            film.year = form.year.data,
-            film.director = form.director.data,
-            film.rating = form.rating.data,
-            film.logo = filename
-            db_sess.commit()
-            return redirect('/')
-        else:
-            abort(404)
+        logo_dir = os.path.join(os.path.dirname(app.instance_path), 'static')
+        f = form.logo.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(logo_dir, 'img', filename))
+        film = Films(
+            name = form.name.data,
+            genre = form.genre.data,
+            year = form.year.data,
+            director = form.director.data,
+            rating = form.rating.data,
+            logo = filename
+            )
+        current_user.film.append(film)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return render_template('index.html', title='sdgsdg')
     return render_template('film.html',
                            title='Редактирование работы',
                            logo_path='../static/img/' + film.logo,
@@ -155,6 +152,8 @@ def film_delete(id):
                                       (Films.user == current_user)|(current_user == '1')
                                       ).first()
     if film:
+        logo_path = os.path.join(os.path.dirname(app.instance_path), 'static\\img\\' + film.logo)
+        os.remove(logo_path)
         db_sess.delete(film)
         db_sess.commit()
     else:
