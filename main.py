@@ -141,6 +141,7 @@ def edit_news(id):
     
     return render_template('film.html',
                            title='Редактирование работы',
+                           logo_path = '..\\static\\img\\' + film.logo,
                            form=form
                            )
 
