@@ -11,7 +11,6 @@ import os
 from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = 'static/img'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
 
 app = Flask(__name__)
@@ -122,25 +121,26 @@ def edit_news(id):
             abort(404)
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        logo_dir = os.path.join(os.path.dirname(app.instance_path), 'static')
-        f = form.logo.data
-        filename = secure_filename(f.filename)
-        f.save(os.path.join(logo_dir, 'img', filename))
-        film = Films(
-            name = form.name.data,
-            genre = form.genre.data,
-            year = form.year.data,
-            director = form.director.data,
-            rating = form.rating.data,
-            logo = filename
-            )
-        current_user.film.append(film)
-        db_sess.merge(current_user)
-        db_sess.commit()
-        return render_template('index.html', title='sdgsdg')
+        film = db_sess.query(Films).filter(Films.id == id, current_user.is_admin).first()
+        if film:
+            os.remove('static\\img\\' + film.logo)
+            logo_dir = os.path.join(os.path.dirname(app.instance_path), 'static')
+            f = form.logo.data
+            filename = secure_filename(f.filename)
+            f.save(os.path.join(logo_dir, 'img', filename))
+            film.name = form.name.data
+            film.genre = form.genre.data
+            film.year = form.year.data
+            film.director = form.director.data
+            film.rating = form.rating.data
+            film.logo = filename
+            db_sess.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    
     return render_template('film.html',
                            title='Редактирование работы',
-                           logo_path='../static/img/' + film.logo,
                            form=form
                            )
 
